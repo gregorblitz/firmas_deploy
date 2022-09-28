@@ -5,10 +5,15 @@ from pytesseract import Output
 from matplotlib import pyplot as plt
 import re
 from pdf2image import convert_from_path
- 
+import time
+from PIL import Image 
+from PIL import ImageDraw 
+from PIL import ImageFont 
+from datetime import datetime, timezone
+import datetime
+from PIL import Image 
 # Parte de covertir 1 pdf a imagen 
-images = convert_from_path('Respuesta Req Cantagallo GI2843.pdf') 
-images[len(images)-1].save('last_page'+'.png', 'JPEG')
+
 
 
 
@@ -56,3 +61,31 @@ while (i<total-1):
 print(newdata)
 newx=newdata[0]
 newy=newdata[1]
+
+filepath = "signature.png"
+img = Image.open(filepath) 
+  
+width = img.width 
+height = img.height +3
+  
+print("The height of the image is: ", height) 
+print("The width of the image is: ", width) 
+
+
+td =time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())
+img = Image.open('signature.png') 
+I1 = ImageDraw.Draw(img) 
+I1.text((0, 0), td , fill =(255, 0, 0)) 
+img.show() 
+img.save("signature.png") 
+
+Image1 = Image.open('last_page.png') 
+Image1copy = Image1.copy() 
+Image2 = Image.open('signature.png') 
+Image2copy = Image2.copy() 
+Image1copy.paste(Image2copy,(newx, newy-height)) 
+Image1copy.save('pasted2.png')
+
+pdf = pytesseract.image_to_pdf_or_hocr('pasted2.png', extension='pdf')
+with open('Doc_firmado.pdf', 'w+b') as f:
+    f.write(pdf) # pdf type is bytes by default
