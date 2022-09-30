@@ -49,15 +49,16 @@ for i in range(n_boxes):
 cv2.imwrite('ImagenRectangulos.jpg',img)
 
 ##Encontrar el Bloque al que pertenece la palabra deseada
+a='MAURICIO'
 bloque=0
 i=0
 total=n_boxes
 while (i<total-1):
-    bloque=bloque+1
-    i=i+1
-    if(data_image['text'][i]=='Acevedo'):
-        newdata=[0,0]
-        newdata=[data_image['left'][bloque],data_image['top'][bloque]]
+  bloque=bloque+1
+  i=i+1
+  if(data_image['text'][i].casefold()==a.casefold()):
+    newdata=[0,0]
+    newdata=[data_image['left'][bloque],data_image['top'][bloque]]
 print(newdata)
 newx=newdata[0]
 newy=newdata[1]
