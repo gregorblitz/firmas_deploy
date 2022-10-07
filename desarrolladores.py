@@ -15,6 +15,7 @@ from datetime import datetime, timezone
 import datetime
 from PIL import Image 
 
+cont=0
 aux=[]
 aux2=[]
 contenido = os.listdir('C:/Users/USUARIO/OneDrive/Escritorio/desarrolladores_claro/firma-pdf')
@@ -29,10 +30,14 @@ for i in contenido:
             aux2.append(ultima_pag)
 for j in aux2:
     #Parte de coordenadas para la correcta firma
-    path_Example= 'Barranquilla Impuesto al Telefono.pdf1.jpg'
+    y=j
+    path_Example = y
     img_color = cv2.imread(path_Example)
-    plt.imshow(img_color)
+    ##print(type(img_color),cont)
+    cont+=1
+    ##plt.imshow(img_color)
     ##plt.show()
+    
     img_gris = cv2.cvtColor(img_color, cv2.COLOR_BGR2GRAY)
     plt.imshow(img_gris)
     ##plt.show()
@@ -60,18 +65,20 @@ for j in aux2:
     ##cv2.imwrite('ImagenRectangulos.jpg',img)
 
     ##Encontrar el Bloque al que pertenece la palabra deseada
-    a='MAURICIO'
+    a='MAURICIO' 
+    b= 'CARLOS'
     bloque=0
     i=0
     total=n_boxes
     while (i<total-1):
         bloque=bloque+1
         i=i+1
-        if(data_image['text'][i].casefold()==a.casefold()):
+        if(data_image['text'][i].casefold()==a.casefold() or data_image['text'][i].casefold()==b.casefold())  :
             newdata=[0,0]
             newdata=[data_image['left'][bloque],data_image['top'][bloque]]
-        print(newdata)
-        newx=newdata[0]
+        else: 
+            print(data_image['text'][i].casefold(),"vs",b.casefold())
+    newx=newdata[0]
     newy=newdata[1]
 
     filepath = (" signature.png")
@@ -98,4 +105,5 @@ for j in aux2:
     Image1copy.paste(Image2copy,(newx, newy-height)) 
     Image1copy.save(j,'firmado.png')
 
-    """
+print(j)
+"""
