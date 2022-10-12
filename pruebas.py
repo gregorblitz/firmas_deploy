@@ -74,24 +74,33 @@ def resumen(nombre,apellido,tipofirma,carpetaentrada,carpetasalida):
         from PIL import Image   
         import random
         import shutil
+        import img2pdf
 
-        aux=[]
-        aux2=[]
-        contenido = os.listdir('C:/Users/USUARIO/OneDrive/Escritorio/desarrolladores_claro/firma-pdf')
+        name_doc=[]
+        name_pages=[]
+        last_page=[]
+        number_pages=[]
+        packtopdf=[]
+        docsf=[]
+        cont=0
+        aux1=0
+        aux2=0
+        contenido = os.listdir(EntCarpeta.get())
         for i in contenido:
             if i.endswith('.pdf'):
+                    name_doc.append(i)
                     images = convert_from_path(i)
+                    number_pages.append(len(images))
                     for j in range(len(images)):
                         
                         images[j].save( i + str(j) +'.jpg')
-                        aux.append(( i + str(j) +'.jpg'))
+                        name_pages.append(( i + str(j) +'.jpg'))
                         ultima_pag=(( i + str(j) +'.jpg'))
-                    aux2.append(ultima_pag)
+                    last_page.append(ultima_pag)
+                    
+        for j in range(0,len(last_page)):
 
-        print(aux)
-        for j in range(0,len(aux2)):
-
-            path_Example = aux2[j]
+            path_Example = last_page[j]
             img_color = cv2.imread(path_Example)
             plt.imshow(img_color)
             
@@ -102,12 +111,12 @@ def resumen(nombre,apellido,tipofirma,carpetaentrada,carpetasalida):
 
             thresh_img = cv2.threshold(img_gris, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)[1]
             plt.imshow(thresh_img)
-        
+
 
             kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (1,2))
             opening_image = cv2.morphologyEx(thresh_img, cv2.MORPH_OPEN, kernel,iterations=1)
             plt.imshow(opening_image)
-        
+
 
             invert_image = 255 - opening_image
             plt.imshow(invert_image)
@@ -138,11 +147,11 @@ def resumen(nombre,apellido,tipofirma,carpetaentrada,carpetasalida):
             i=0
             total=n_boxes
             while (i<total-1):
-             bloque=bloque+1
-             i=i+1
-             if(data_image['text'][i].casefold()==a.casefold() or data_image['text'][i].casefold()==b.casefold() ):
-                newdata=[0,0]
-                newdata=[data_image['left'][bloque],data_image['top'][bloque]]
+                bloque=bloque+1
+                i=i+1
+                if(data_image['text'][i].casefold()==a.casefold() or data_image['text'][i].casefold()==b.casefold() ):
+                    newdata=[0,0]
+                    newdata=[data_image['left'][bloque],data_image['top'][bloque]]
             print(newdata)
             newx=newdata[0]
             newy=newdata[1]
@@ -154,23 +163,27 @@ def resumen(nombre,apellido,tipofirma,carpetaentrada,carpetasalida):
             width = img.width 
             height = img.height +3
             
-            print("The height of the image is: ", height) 
-            print("The width of the image is: ", width) 
-
-            ##Agregando fecha
-        
-          
 
             ##Poniendo la firma en la ubicacion correcta
-
-        
             firmado=[]  
-            Image1 = Image.open(aux2[j]) 
+            Image1 = Image.open(last_page[j]) 
             Image1copy = Image1.copy() 
             Image2 = Image.open(filepath) 
             Image2copy = Image2.copy() 
             Image1copy.paste(Image2copy,(newx, newy-height)) 
-            Image1copy.save(aux2[j])
+            Image1copy.save(last_page[j])
+
+
+        for i in number_pages:
+            aux2=aux1+i
+            for j in range(aux1,aux2):
+                packtopdf.append(name_pages[j])
+            with open(name_doc[cont], "wb") as documento:
+                documento.write(img2pdf.convert(packtopdf))
+
+            cont+=1
+            aux1=aux2
+            packtopdf=[]
 
     
 def cargarFirma(nombre,apellido,opcion,ubicFirma):
