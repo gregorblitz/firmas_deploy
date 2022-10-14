@@ -1,5 +1,4 @@
-"""
-import os
+"""import os
 import cv2
 import pytesseract
 pytesseract.pytesseract.tesseract_cmd = r'C:\Archivos de programa\Tesseract-OCR\tesseract'
@@ -83,7 +82,7 @@ for j in range(0,len(last_page)):
 
     ##Encontrar el Bloque al que pertenece la palabra deseada
     a='acevedo'
-    b='Torres'
+    b='torres'
     bloque=0
     i=0
     total=n_boxes
@@ -91,8 +90,8 @@ for j in range(0,len(last_page)):
         bloque=bloque+1
         i=i+1
         if(data_image['text'][i].casefold()==a.casefold() or data_image['text'][i].casefold()==b.casefold() ):
-         newdata=[0,0]
-         newdata=[data_image['left'][bloque],data_image['top'][bloque]]
+            newdata=[0,0]
+            newdata=[data_image['left'][bloque],data_image['top'][bloque]]
     print(newdata)
     newx=newdata[0]
     newy=newdata[1]
@@ -103,7 +102,7 @@ for j in range(0,len(last_page)):
     
     width = img.width 
     height = img.height +3
-      
+    
 
     ##Poniendo la firma en la ubicacion correcta
     firmado=[]  
@@ -119,8 +118,10 @@ for i in number_pages:
     aux2=aux1+i
     for j in range(aux1,aux2):
         packtopdf.append(name_pages[j])
+    a4inpt = (img2pdf.mm_to_pt(210),img2pdf.mm_to_pt(297))
+    layout_fun = img2pdf.get_layout_fun(a4inpt)
     with open(name_doc[cont], "wb") as documento:
-        documento.write(img2pdf.convert(packtopdf))
+        documento.write(img2pdf.convert(packtopdf,layout_fun=layout_fun))
 
     cont+=1
     aux1=aux2

@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Mon Sep 26 08:59:54 2022
 
-@author: 57321
-"""
 
 from tkinter import *
 from PIL import ImageTk,Image,ImageDraw,ImageFont
@@ -55,9 +51,6 @@ def resumen(nombre,apellido,tipofirma,carpetaentrada,carpetasalida):
     #Label(root, text=response).pack()
     
     if response == 1:
-       # os.system('python sign_pdf.py -i ".\static\Letter of confirmation.pdf" -s "BM" -x 330 -y 280')
-        #os.system('python desarrolladores.py')
-        
         import os
         import cv2
         import pytesseract
@@ -157,8 +150,7 @@ def resumen(nombre,apellido,tipofirma,carpetaentrada,carpetasalida):
             newy=newdata[1]
 
             ##Conociendo el tamaño de la firma  
-            filepath = ubicacionFirma.get()
-            img = Image.open(filepath) 
+            img = Image.open('firmafinal.png') 
             
             width = img.width 
             height = img.height +3
@@ -168,7 +160,7 @@ def resumen(nombre,apellido,tipofirma,carpetaentrada,carpetasalida):
             firmado=[]  
             Image1 = Image.open(last_page[j]) 
             Image1copy = Image1.copy() 
-            Image2 = Image.open(filepath) 
+            Image2 = Image.open('firmafinal.png') 
             Image2copy = Image2.copy() 
             Image1copy.paste(Image2copy,(newx, newy-height)) 
             Image1copy.save(last_page[j])
@@ -178,32 +170,78 @@ def resumen(nombre,apellido,tipofirma,carpetaentrada,carpetasalida):
             aux2=aux1+i
             for j in range(aux1,aux2):
                 packtopdf.append(name_pages[j])
+            a4inpt = (img2pdf.mm_to_pt(210),img2pdf.mm_to_pt(297))
+            layout_fun = img2pdf.get_layout_fun(a4inpt)
             with open(name_doc[cont], "wb") as documento:
-                documento.write(img2pdf.convert(packtopdf))
+                documento.write(img2pdf.convert(packtopdf,layout_fun=layout_fun))
 
             cont+=1
             aux1=aux2
             packtopdf=[]
 
-    
+        for i in name_doc:
+            name_file=(EntCarpeta.get()+'/'+i)
+            shutil.move(name_file,SalCarpeta.get())
+        for i in name_pages:
+             os.remove(i) 
+        
 def cargarFirma(nombre,apellido,opcion,ubicFirma):
     
     if opcion=="Manuscrito":
         firmapuesta = Image.open(ubicFirma)
         firmapuesta = firmapuesta.resize((220,80))
+  
+        img1 = Image.open(r"Base_m.png") 
+        img1=img1.resize((240,110))
+        img2 = firmapuesta
+  
+        img1.paste(img2,(10,0)) 
+  
+        #img1.show() 
+      
+        fecha_hora = datetime.datetime.now()
+        h = fecha_hora.strftime("%d/%m/%Y, %H:%M:%S")
+        #base=Image.open("img2.png").convert("RGBA")
+        base=img1.convert("RGBA")
+        txt=Image.new("RGBA",base.size,(255,255,255,0))
+        fnt1=ImageFont.truetype("times.ttf",12)
+        Nombres=ImageDraw.Draw(txt)
+        fecha = f'Firmado {h}'
+        Nombres.text((30,80),fecha ,font=fnt1,fill=(0,0,0))
+        out=Image.alpha_composite(base,txt)
+        out.save("Manuscrito_fecha.png")
+        
+        firmapuesta=out
         firmapuestaimg = ImageTk.PhotoImage(firmapuesta)
+
                               
         firmafinal = Label(firmamos,image=firmapuestaimg) 
         firmafinal.image = firmapuestaimg
         firmafinal.grid(row=1, column=0,padx=80)
+        
+        
+        firmafecha = Image.open("Manuscrito_fecha.png")
+        firmafecha = firmafecha.resize((220,80))
+        firmafecha.save("firmafinal.png")
+        
     else:
+
+        Tamaño_N=len(str(nombre)+str(apellido))
+
+        
 
         fecha_hora = datetime.datetime.now()
         h = fecha_hora.strftime("%d/%m/%Y, %H:%M:%S")
         base=Image.open("base.png").convert("RGBA")
         txt=Image.new("RGBA",base.size,(255,255,255,0))
-        fnt=ImageFont.truetype("times.ttf",20)
-        fnt1=ImageFont.truetype("times.ttf",12)
+        if Tamaño_N <19 :
+         fnt=ImageFont.truetype("times.ttf",20)
+         fnt1=ImageFont.truetype("times.ttf",12)
+        else:
+                fnt=ImageFont.truetype("times.ttf",14)
+                fnt1=ImageFont.truetype("times.ttf",11)
+        
+
         Nombres=ImageDraw.Draw(txt)
         fecha = f'Firmado {h}'
         Nombres.text((2,7),str(nombre)+" "+str(apellido),font=fnt,fill=(0,0,0))
@@ -218,8 +256,13 @@ def cargarFirma(nombre,apellido,opcion,ubicFirma):
         firmafinal = Label(firmamos,image=firmapuestaimg) 
         firmafinal.image = firmapuestaimg
         firmafinal.grid(row=1, column=0,padx=80)
+        
+        firmafecha = Image.open("Nombres.png")
+        firmafecha = firmafecha.resize((220,80))
+        firmafecha.save("firmafinal.png")
 
 #----------------------------------------
+
 
 
 #------Configuraciones Iniciales---------------
