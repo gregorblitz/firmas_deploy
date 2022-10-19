@@ -82,36 +82,40 @@ for j in range(0,len(last_page)):
 
     ##Encontrar el Bloque al que pertenece la palabra deseada
     a='acevedo'
-    b='torres'
+    b='mauricio'
     bloque=0
     i=0
     total=n_boxes
-    while (i<total-1):
-        bloque=bloque+1
-        i=i+1
-        if(data_image['text'][i].casefold()==a.casefold() or data_image['text'][i].casefold()==b.casefold() ):
-            newdata=[0,0]
-            newdata=[data_image['left'][bloque],data_image['top'][bloque]]
-    print(newdata)
-    newx=newdata[0]
-    newy=newdata[1]
+    try:
+        while (i<total-1):
+            bloque=bloque+1
+            i=i+1
+            if(data_image['text'][i].casefold()==a.casefold() or data_image['text'][i].casefold()==b.casefold() ):
+                newdata=[0,0]
+                newdata=[data_image['left'][bloque],data_image['top'][bloque]]
+        print(newdata)
+        newx=newdata[0]
+        newy=newdata[1]
+  
+        ##Conociendo el tamaño de la firma  
+        filepath = 'signature.png'
+        img = Image.open(filepath) 
+        
+        width = img.width 
+        height = img.height +3
+        
 
-    ##Conociendo el tamaño de la firma  
-    filepath = 'signature.png'
-    img = Image.open(filepath) 
-    
-    width = img.width 
-    height = img.height +3
-    
+        ##Poniendo la firma en la ubicacion correcta
+        firmado=[]  
+        Image1 = Image.open(last_page[j]) 
+        Image1copy = Image1.copy() 
+        Image2 = Image.open(filepath) 
+        Image2copy = Image2.copy() 
+        Image1copy.paste(Image2copy,(newx, newy-height)) 
+        Image1copy.save(last_page[j])
+    except NameError:
+        i+=1
 
-    ##Poniendo la firma en la ubicacion correcta
-    firmado=[]  
-    Image1 = Image.open(last_page[j]) 
-    Image1copy = Image1.copy() 
-    Image2 = Image.open(filepath) 
-    Image2copy = Image2.copy() 
-    Image1copy.paste(Image2copy,(newx, newy-height)) 
-    Image1copy.save(last_page[j])
 
 
 for i in number_pages:
