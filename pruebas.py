@@ -298,7 +298,7 @@ root.resizable(False,False) #No permite hacer la ventana mas grande
 root.title("Firmas Gen XXI")
 
 #Permite colocarle el logo al programa
-root.iconbitmap("clarocirculo.ico")
+#root.iconbitmap("clarocirculo.ico")
 
 #----------------------------------------------
 
@@ -310,23 +310,23 @@ FirmaTexto = "                            Firmas Gen XXI                        
 FirmaTxt = Label(root,text=FirmaTexto,font=(fuente,18)).grid(row=1,column=1)#Puede marcar error si no se tiene el font instalado
 
 #Permite Poner el Logo de Claro
-LogoClaro = Image.open("claroplano.png")
+"""LogoClaro = Image.open("claroplano.png")
 LogoClaro = LogoClaro.resize((220,80))
 LogoImg = ImageTk.PhotoImage(LogoClaro)
                       
 LogoPoner = Label(image=LogoImg) 
 LogoPoner.image = LogoImg
-LogoPoner.grid(row=1, column=0)
+LogoPoner.grid(row=1, column=0)"""
 
 
 #Permite Poner el Logo de Gen XXI
-LogoGen = Image.open("genlogo2.png")
+"""LogoGen = Image.open("genlogo2.png")
 LogoGen = LogoGen.resize((200,100))
 LogoGImg = ImageTk.PhotoImage(LogoGen)
                       
 LogoGPoner = Label(image=LogoGImg)
 LogoGPoner.image = LogoGImg
-LogoGPoner.grid(row=1, column=2)
+LogoGPoner.grid(row=1, column=2)"""
 #----------------------------------------------
 
 
